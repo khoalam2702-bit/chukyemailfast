@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=THAY_LINK_GOOGLE_SITE_VAO_DAY">
+  <title>Redirecting...</title>
+  <script>
+    window.location.replace("THAY_LINK_GOOGLE_SITE_VAO_DAY");
+  </script>
+</head>
+<body>
+  Đang chuyển hướng tới trang web... Nếu không tự chuyển, <a href="THAY_LINK_GOOGLE_SITE_VAO_DAY">nhấp vào đây</a>.
+</body>
+</html>
