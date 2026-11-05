@@ -3,14 +3,1254 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Đang chuyển hướng...</title>
-  <meta http-equiv="refresh" content="0; url=https://sites.google.com/pmktfast.com/taochukyemailfastdanang">
+  <title>FAST Email Signature Studio - Siêu Nét Retina 2x & Cố Định Cột Trái</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts & System Font Stack -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script>
-    window.location.replace("https://sites.google.com/pmktfast.com/taochukyemailfastdanang");
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fastTeal: '#00A29B',
+            fastTealLight: '#E6F7F6',
+            fastTealDark: '#007C77',
+            fastRed: '#E31E24',
+          },
+          fontFamily: {
+            sans: ['-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', 'sans-serif'],
+          }
+        }
+      }
+    }
   </script>
+  <style>
+    .glass-card {
+      background: rgba(255, 255, 255, 0.98);
+      border: 1px solid #e2e8f0;
+    }
+    /* Chống mờ chữ khi render ảnh canvas */
+    .crisp-canvas {
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
+    }
+    /* Thanh cuộn độc lập cho bảng điều khiển bên trái */
+    aside::-webkit-scrollbar {
+      width: 5px;
+    }
+    aside::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    aside::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    aside::-webkit-scrollbar-thumb:hover {
+      background: #00A29B;
+    }
+  </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; padding-top: 50px;">
-  <p>Đang chuyển hướng đến trang web...</p>
-  <p>Nếu trang không tự tải, <a href="https://sites.google.com/pmktfast.com/taochukyemailfastdanang">nhấn vào đây</a>.</p>
+<body class="bg-slate-100 text-slate-800 h-screen overflow-hidden font-sans antialiased flex flex-col">
+
+  <!-- Header Điều Khiển -->
+  <header class="glass-card shrink-0 h-[53px] z-40 border-b border-slate-200 shadow-xs bg-white/95 backdrop-blur-md">
+    <div class="h-full px-4 flex items-center justify-between gap-3">
+      <div class="flex items-center space-x-2.5">
+        <div class="w-8 h-8 rounded-lg bg-fastTeal flex items-center justify-center text-white font-black text-base shadow-sm">
+          F
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-extrabold text-sm text-slate-900">FAST Signature Studio HD</h1>
+            <span class="px-2 py-0.5 text-[10px] font-bold bg-teal-100 text-teal-800 rounded border border-teal-300">Siêu Nét Retina 2x</span>
+          </div>
+          <p class="text-[11px] text-slate-500 hidden sm:block">Độ nét cao Retina • Khóa kích thước 410px vừa khít Fast SPM &amp; Gmail</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Buttons -->
+      <div class="flex items-center gap-2 text-xs">
+        <span class="text-[11px] text-slate-500 hidden sm:inline">Chế độ xuất:</span>
+        <span id="headerResolutionBadge" class="font-extrabold text-xs px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-300 rounded-md">
+          ⭐ 2x Retina (Nét Căng)
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- BỐ CỤC 2 CỘT CỐ ĐỊNH: BÊN TRÁI LUÔN GHIM CHẶT, BÊN PHẢI CUỘN TỰ DO -->
+  <div class="flex-1 flex flex-row w-full h-[calc(100vh-53px)] overflow-hidden">
+    
+    <!-- CỘT TRÁI: CỐ ĐỊNH 100% TRÊN MÀN HÌNH, CUỘN ĐỘC LẬP -->
+    <aside id="leftSidebar" class="w-[330px] sm:w-[360px] shrink-0 bg-white border-r border-slate-200 h-full overflow-y-auto p-3.5 space-y-3.5 shadow-sm z-30">
+      
+      <!-- 1. MỤC CHỌN ĐỘ NÉT & ĐỘ PHÂN GIẢI (RETINA HD) -->
+      <div class="p-3 bg-gradient-to-br from-emerald-50 to-teal-50 border border-teal-200 rounded-xl space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-teal-950 text-xs flex items-center gap-1">
+            <span>✨</span> Độ Nét &amp; Phân Giải:
+          </span>
+          <span id="lblResMode" class="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-1.5 py-0.5 rounded">2x Nét Căng</span>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-1 text-[11px]">
+          <button type="button" onclick="setRenderScale(1)" id="btnScale1" class="py-1 px-1 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 font-medium text-center transition">
+            1x (Chuẩn)
+          </button>
+          <button type="button" onclick="setRenderScale(2)" id="btnScale2" class="py-1 px-1 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition">
+            ⭐ 2x (Retina)
+          </button>
+          <button type="button" onclick="setRenderScale(3)" id="btnScale3" class="py-1 px-1 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 font-medium text-center transition">
+            3x (Ultra HD)
+          </button>
+        </div>
+        <p class="text-[10px] text-teal-800 leading-tight">
+          <strong>2x Retina:</strong> Tăng mật độ điểm ảnh gấp đôi, chữ và logo hiển thị sắc nét từng đường kim mũi chỉ, không bao giờ bị mờ!
+        </p>
+      </div>
+
+      <!-- 2. BỘ TINH CHỈNH KÍCH THƯỚC TRỰC TIẾP -->
+      <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800 text-xs flex items-center gap-1">
+            <span>📏</span> Độ Rộng Khung Chữ Ký:
+          </span>
+          <span id="sliderWidthVal" class="font-extrabold text-fastTeal text-xs">410 px</span>
+        </div>
+
+        <!-- Nút chọn nhanh kích cỡ -->
+        <div class="grid grid-cols-3 gap-1 text-[11px]">
+          <button type="button" onclick="applyPresetWidth(360)" id="btnSize360" class="py-1 px-1.5 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 text-center font-medium transition">
+            360px (Gọn)
+          </button>
+          <button type="button" onclick="applyPresetWidth(410)" id="btnSize410" class="py-1 px-1.5 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition">
+            410px (Chuẩn SPM)
+          </button>
+          <button type="button" onclick="applyPresetWidth(470)" id="btnSize470" class="py-1 px-1.5 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 text-center font-medium transition">
+            470px (Rộng)
+          </button>
+        </div>
+
+        <!-- Thanh kéo độ rộng tự do -->
+        <div>
+          <div class="flex justify-between text-[10px] text-slate-500 mb-0.5">
+            <span>340px</span>
+            <span class="text-fastTeal font-bold">Kéo chỉnh linh hoạt</span>
+            <span>520px</span>
+          </div>
+          <input type="range" id="sliderWidth" min="340" max="520" value="410" step="5" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-fastTeal" oninput="onWidthSliderChange(this.value)">
+        </div>
+
+        <!-- Cỡ chữ & Độ to Logo FAST -->
+        <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-200 text-[11px]">
+          <div>
+            <div class="flex justify-between mb-0.5">
+              <span class="text-slate-700 font-semibold">Cỡ chữ:</span>
+              <strong id="sliderFontVal" class="text-fastTeal font-bold">11.5 px</strong>
+            </div>
+            <input type="range" id="sliderFont" min="10" max="14" value="11.5" step="0.5" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-fastTeal" oninput="onFontSliderChange(this.value)">
+          </div>
+          <div>
+            <div class="flex justify-between mb-0.5">
+              <span class="text-slate-700 font-semibold">Logo FAST:</span>
+              <strong id="sliderLogoVal" class="text-fastTeal font-bold">100 px</strong>
+            </div>
+            <input type="range" id="sliderLogo" min="80" max="130" value="100" step="5" class="w-full h-1.5 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-fastTeal" oninput="onLogoSliderChange(this.value)">
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. CHỌN PHIÊN BẢN LOGO CHUẨN GỐC -->
+      <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-bold text-slate-800 text-[11px]">Logo FAST chuẩn gốc:</span>
+          <span class="text-[10px] text-slate-500">Giữ nguyên bản 100%</span>
+        </div>
+
+        <div class="grid grid-cols-2 gap-1.5">
+          <button type="button" id="btnLogoEN" onclick="setLogoVersion('EN')" class="py-1 px-2 bg-fastTeal text-white rounded text-[11px] font-bold shadow-xs transition">
+            🇬🇧 Bản EN (ERP Software)
+          </button>
+          <button type="button" id="btnLogoVN" onclick="setLogoVersion('VN')" class="py-1 px-2 bg-slate-100 text-slate-700 border border-slate-200 rounded text-[11px] font-medium hover:bg-slate-200 transition">
+            🇻🇳 Bản VN (Kế toán &amp; ERP)
+          </button>
+        </div>
+
+        <!-- Tải file từ máy -->
+        <div class="pt-1.5 border-t border-slate-100 flex items-center gap-1.5">
+          <label class="flex-1 cursor-pointer flex items-center justify-center gap-1 py-1 px-2 bg-slate-50 border border-dashed border-teal-600 rounded text-[10px] text-slate-700 font-semibold hover:bg-teal-50 transition">
+            <span id="lblUploadName" class="truncate max-w-[150px]">Dùng ảnh logo từ máy...</span>
+            <input type="file" id="fileUploadLogo" accept="image/*" class="hidden" onchange="onCustomLogoUpload(event)">
+          </label>
+          <button type="button" id="btnResetLogo" onclick="resetCustomLogo()" class="hidden px-2 py-1 text-[10px] font-bold text-red-600 bg-red-50 hover:bg-red-100 rounded border border-red-200 transition">
+            Huỷ
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. QUẢN LÝ DÒNG & ĐỊNH DẠNG NÂNG CAO (CHÈN DÒNG Ở BẤT CỨ VỊ TRÍ NÀO, CHỈNH FONT/SIZE/MÀU TỪNG DÒNG) -->
+      <div class="p-3 bg-white border border-slate-200 rounded-xl space-y-3 text-xs shadow-xs">
+        <div class="flex items-center justify-between pb-1.5 border-b border-slate-100">
+          <div class="flex items-center gap-1.5">
+            <span class="text-sm">📝</span>
+            <span class="font-extrabold text-slate-800 text-[12px]">Quản Lý Dòng &amp; Định Dạng</span>
+          </div>
+          <div class="flex items-center gap-1">
+            <button type="button" onclick="addNewLineAtEnd()" class="px-2 py-0.5 bg-teal-50 text-teal-800 hover:bg-teal-100 border border-teal-300 rounded text-[10px] font-bold transition flex items-center gap-0.5">
+              <span>➕</span> Dòng mới
+            </button>
+            <button type="button" onclick="resetToDefaultLines()" class="px-1.5 py-0.5 bg-slate-50 text-slate-600 hover:bg-slate-100 border border-slate-200 rounded text-[10px] transition" title="Khôi phục mẫu chuẩn ban đầu">
+              🔄 Mẫu gốc
+            </button>
+          </div>
+        </div>
+
+        <!-- BẢNG ĐIỀU KHIỂN ĐỊNH DẠNG CHO DÒNG ĐANG CHỌN -->
+        <div id="selectedLineEditor" class="p-2.5 bg-gradient-to-br from-teal-50/80 to-slate-50 border border-teal-300 rounded-lg space-y-2">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-fastTeal animate-pulse"></span>
+              <span class="font-bold text-[11px] text-teal-950">Đang chọn:</span>
+              <span id="lblSelectedLineIndex" class="px-1.5 py-0.2 bg-fastTeal text-white rounded font-extrabold text-[10px]">Dòng #1</span>
+            </div>
+            <div class="flex items-center gap-1">
+              <button type="button" onclick="moveSelectedLine(-1)" title="Di chuyển lên trên" class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-[10px] hover:bg-slate-100 font-bold">⬆ Lên</button>
+              <button type="button" onclick="moveSelectedLine(1)" title="Di chuyển xuống dưới" class="px-1.5 py-0.5 bg-white border border-slate-300 rounded text-[10px] hover:bg-slate-100 font-bold">⬇ Xuống</button>
+            </div>
+          </div>
+
+          <!-- NÚT CHÈN DÒNG Ở BẤT CỨ VỊ TRÍ NÀO (TRÊN / DƯỚI DÒNG HIỆN TẠI) -->
+          <div class="grid grid-cols-2 gap-1 pt-1 border-t border-teal-200/60">
+            <button type="button" onclick="insertLineRelativeToSelected('above')" class="py-1 px-1.5 bg-white hover:bg-teal-50 border border-teal-400 text-teal-900 rounded text-[10px] font-bold transition flex items-center justify-center gap-1 shadow-2xs">
+              <span>⬆➕</span> Chèn dòng lên TRÊN
+            </button>
+            <button type="button" onclick="insertLineRelativeToSelected('below')" class="py-1 px-1.5 bg-white hover:bg-teal-50 border border-teal-400 text-teal-900 rounded text-[10px] font-bold transition flex items-center justify-center gap-1 shadow-2xs">
+              <span>⬇➕</span> Chèn dòng xuống DƯỚI
+            </button>
+          </div>
+
+          <!-- CHỌN FONT CHỮ VÀ CỠ CHỮ RIÊNG CHO DÒNG ĐANG CHỌN -->
+          <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-teal-200/60">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">🔤 Font chữ dòng:</label>
+              <select id="selLineFont" onchange="updateSelectedLineProperty('font', this.value)" class="w-full px-1.5 py-1 bg-white border border-slate-300 rounded text-[11px] text-slate-800 outline-none focus:border-fastTeal font-medium">
+                <option value="sans">Hệ thống (Segoe UI / Sans)</option>
+                <option value="arial">Arial</option>
+                <option value="segoe">Segoe UI</option>
+                <option value="roboto">Roboto</option>
+                <option value="tahoma">Tahoma</option>
+                <option value="times">Times New Roman</option>
+                <option value="georgia">Georgia</option>
+                <option value="courier">Courier New</option>
+              </select>
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-0.5">
+                <label class="text-[10px] font-bold text-slate-700">📏 Cỡ chữ:</label>
+                <span id="lblLineSizeVal" class="text-[10px] font-extrabold text-fastTeal">13.5px</span>
+              </div>
+              <input type="range" id="rngLineSize" min="8" max="18" step="0.5" value="13.5" class="w-full h-1.5 bg-slate-200 rounded appearance-none cursor-pointer accent-fastTeal" oninput="updateSelectedLineProperty('size', parseFloat(this.value))">
+            </div>
+          </div>
+
+          <!-- CHỌN MÀU SẮC CHO DÒNG ĐANG CHỌN -->
+          <div class="space-y-1 pt-1 border-t border-teal-200/60">
+            <div class="flex items-center justify-between">
+              <label class="text-[10px] font-bold text-slate-700 flex items-center gap-1">
+                <span>🎨</span> Màu sắc dòng:
+              </label>
+              <div class="flex items-center gap-1.5">
+                <input type="color" id="inpLineColor" onchange="updateSelectedLineProperty('color', this.value)" class="w-5 h-5 rounded border border-slate-300 cursor-pointer p-0 bg-transparent">
+                <span id="lblLineColorHex" class="text-[10px] font-mono text-slate-700 font-bold">#0f172a</span>
+              </div>
+            </div>
+            <!-- Bảng màu mẫu FAST & Doanh nghiệp -->
+            <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+              <button type="button" onclick="setLineColorQuick('#00A29B')" title="Màu Ngọc FAST (#00A29B)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #00A29B;"></button>
+              <button type="button" onclick="setLineColorQuick('#E31E24')" title="Màu Đỏ FAST (#E31E24)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #E31E24;"></button>
+              <button type="button" onclick="setLineColorQuick('#0f172a')" title="Đen Đậm (#0f172a)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #0f172a;"></button>
+              <button type="button" onclick="setLineColorQuick('#334155')" title="Xám Đen (#334155)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #334155;"></button>
+              <button type="button" onclick="setLineColorQuick('#475569')" title="Xám Nhẹ (#475569)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #475569;"></button>
+              <button type="button" onclick="setLineColorQuick('#0284c7')" title="Xanh Link Web/Email (#0284c7)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #0284c7;"></button>
+              <button type="button" onclick="setLineColorQuick('#007C77')" title="Xanh Ngọc Đậm (#007C77)" class="w-5 h-5 rounded-full border border-white shadow-xs transition hover:scale-110" style="background-color: #007C77;"></button>
+            </div>
+          </div>
+
+          <!-- KIỂU CHỮ (IN ĐẬM / IN NGHIÊNG) & BIỂU TƯỢNG ĐẦU DÒNG -->
+          <div class="grid grid-cols-2 gap-1.5 pt-1 border-t border-teal-200/60">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Biểu tượng đầu dòng:</label>
+              <select id="selLinePrefix" onchange="updateSelectedLineProperty('prefix', this.value)" class="w-full px-1.5 py-1 bg-white border border-slate-300 rounded text-[11px] outline-none">
+                <option value="">(Không có)</option>
+                <option value="👤">👤 Người dùng</option>
+                <option value="🏢">🏢 Đơn vị</option>
+                <option value="📍">📍 Địa chỉ</option>
+                <option value="📱">📱 Di động</option>
+                <option value="📞">📞 Điện thoại bàn</option>
+                <option value="✉️">✉️ Email</option>
+                <option value="🌐">🌐 Website</option>
+                <option value="✨">✨ Điểm nhấn</option>
+                <option value="💼">💼 Chức danh</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-700 mb-0.5">Kiểu chữ &amp; Thao tác:</label>
+              <div class="flex items-center gap-1">
+                <button type="button" id="btnToggleBold" onclick="toggleSelectedLineStyle('bold')" class="flex-1 py-1 border border-slate-300 rounded font-black text-xs bg-white hover:bg-slate-50 transition" title="Bật/Tắt In Đậm">
+                  B
+                </button>
+                <button type="button" id="btnToggleItalic" onclick="toggleSelectedLineStyle('italic')" class="flex-1 py-1 border border-slate-300 rounded italic font-serif text-xs bg-white hover:bg-slate-50 transition" title="Bật/Tắt In Nghiêng">
+                  I
+                </button>
+                <button type="button" onclick="deleteSelectedLine()" title="Xóa dòng này" class="px-2 py-1 border border-red-300 bg-red-50 hover:bg-red-100 text-red-600 rounded text-xs transition font-bold">
+                  🗑️
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DANH SÁCH TẤT CẢ CÁC DÒNG HIỆN CÓ (CLICK ĐỂ CHỌN HOẶC SỬA NHANH) -->
+        <div class="space-y-1.5 pt-1">
+          <div class="flex items-center justify-between text-[11px] font-bold text-slate-700">
+            <span>Danh sách các dòng:</span>
+            <span id="lblTotalLines" class="text-[10px] text-slate-400 font-normal">7 dòng</span>
+          </div>
+          <div id="linesContainer" class="space-y-1.5 max-h-[290px] overflow-y-auto pr-1">
+            <!-- Danh sách render tự động từ signatureLines -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Hướng dẫn sử dụng Fast SPM -->
+      <div class="p-2.5 bg-teal-50/70 border border-teal-200 rounded-lg text-[11px] text-teal-950 leading-relaxed">
+        <p class="font-bold flex items-center gap-1 mb-1 text-teal-950">
+          <span>💡</span> Mẹo chèn Nét Căng &amp; Không bị to:
+        </p>
+        <ul class="list-disc pl-4 space-y-1 text-slate-700">
+          <li>Bấm <strong>"Tải ảnh Nét Căng HD"</strong>: Ảnh đạt độ nét 2x Retina.</li>
+          <li>Hoặc bấm <strong>"📋 Chép ảnh (Ctrl+V)"</strong> rồi dán trực tiếp vào SPM.</li>
+          <li>Nếu hệ thống SPM bung to ảnh: Click đúp vào ảnh trong ô soạn thư SPM, nhập ô <strong>Width = 410</strong>. Ảnh sẽ lập tức vừa in và nét căng!</li>
+        </ul>
+      </div>
+
+    </aside>
+
+    <!-- CỘT PHẢI: CUỘN XEM MÔ PHỎNG & CÁC MẪU CHỮ KÝ THOẢI MÁI -->
+    <main class="flex-1 h-full overflow-y-auto bg-slate-100/70 p-4 md:p-6 space-y-5 min-w-0">
+
+      <!-- KHUNG MÔ PHỎNG THỰC TẾ ĐỐI CHIẾU VỚI EMAIL SPM CỦA BẠN -->
+      <div class="bg-white rounded-xl border border-slate-300 shadow-sm overflow-hidden">
+        <div class="bg-slate-100 px-4 py-2 border-b border-slate-200 flex items-center justify-between text-xs">
+          <div class="flex items-center gap-1.5">
+            <span class="w-2.5 h-2.5 rounded-full bg-red-400"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+            <span class="font-bold text-slate-800 ml-1.5">Mô Phỏng Trực Tiếp Trong Email SPM (Đối chiếu độ nét &amp; kích thước 100%)</span>
+          </div>
+          <span class="text-[11px] text-teal-800 font-semibold bg-teal-50 px-2 py-0.5 rounded border border-teal-200">
+            Khớp độ dài câu thư • Nét căng
+          </span>
+        </div>
+
+        <div class="p-4 bg-white text-xs space-y-2 font-sans">
+          <!-- Giả lập chính xác email của người dùng trong ảnh chụp -->
+          <div class="text-slate-500 text-[11px] pb-1 border-b border-slate-100">
+            <strong>Đến:</strong> khoalam2702@gmail.com &nbsp;|&nbsp; <strong>Tiêu đề:</strong> [SPM] Thử gửi email
+          </div>
+
+          <!-- Dòng chữ trong ảnh chụp của bạn -->
+          <p class="text-slate-800 text-[13px] leading-relaxed font-normal pt-1">
+            Email thử từ hệ thống SPM - FĐN lúc 2026-11-05 12:03:26.
+          </p>
+
+          <!-- Vùng chữ ký Canvas trực tiếp nằm ngay bên dưới để kiểm tra tỉ lệ -->
+          <div class="pt-3">
+            <div class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1">
+              <span>↓</span> Ảnh chữ ký hiển thị thực tế dưới chân email:
+            </div>
+            <div class="p-2 bg-slate-50/50 rounded-lg border border-dashed border-slate-300 inline-block overflow-x-auto max-w-full">
+              <img id="simulatedEmailImg" alt="Xem trước chữ ký SPM" class="block border border-slate-200 bg-white shadow-xs" style="width: 410px; height: auto;" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MẪU 1: VẠCH ĐỨNG CHUẨN FAST (MẪU CHÍNH BẠN DÙNG TRONG ẢNH) -->
+      <div class="glass-card rounded-xl p-4 shadow-xs border border-slate-200 bg-white">
+        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-slate-100 mb-3 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-fastTeal text-white text-[11px] font-bold rounded">Mẫu 1</span>
+            <h3 class="font-bold text-slate-900 text-sm">Vạch Đứng FAST Chuẩn (Đúng mẫu trong ảnh gửi thử SPM)</h3>
+          </div>
+
+          <!-- CÁC NÚT HÀNH ĐỘNG DỨT ĐIỂM -->
+          <div class="flex items-center gap-1.5 flex-wrap">
+            <button onclick="downloadCanvasImage('canvas-sig-1', 'Chu-Ky-FAST-Mau-1')" title="Xuất file ảnh đạt độ nét 2x Retina, rõ từng nét chữ" class="text-xs px-3 py-1.5 text-white bg-fastTeal hover:bg-fastTealDark rounded-md font-bold transition flex items-center gap-1.5 shadow-sm">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>
+              Tải ảnh Nét Căng HD
+            </button>
+
+            <button onclick="copyCanvasImageToClipboard('canvas-sig-1')" title="Sao chép ảnh trực tiếp vào bộ nhớ tạm để ấn Ctrl+V dán vào SPM" class="text-xs px-2.5 py-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-md font-bold transition flex items-center gap-1">
+              📋 Chép ảnh (Ctrl+V)
+            </button>
+
+            <button onclick="copyRichTextSignature('table-sig-1', 'Mẫu 1')" title="Dán trực tiếp dạng văn bản thật vào SPM hoặc Gmail" class="text-xs px-2.5 py-1.5 text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-md font-medium transition flex items-center gap-1">
+              Sao chép HTML
+            </button>
+          </div>
+        </div>
+
+        <div class="p-3 bg-slate-50/70 rounded-lg border border-slate-200 overflow-x-auto flex justify-start">
+          <canvas id="canvas-sig-1" class="border border-slate-200 bg-white shadow-xs rounded crisp-canvas"></canvas>
+        </div>
+        <div id="table-sig-1" style="display: none;"></div>
+      </div>
+
+      <!-- MẪU 2: THẺ BO VIỀN NHẸ FAST -->
+      <div class="glass-card rounded-xl p-4 shadow-xs border border-slate-200 bg-white">
+        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-slate-100 mb-3 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-teal-800 text-white text-[11px] font-bold rounded">Mẫu 2</span>
+            <h3 class="font-bold text-slate-900 text-sm">Thẻ Khung Viền Nhẹ &amp; Accent Teal</h3>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="downloadCanvasImage('canvas-sig-2', 'Chu-Ky-FAST-Mau-2')" class="text-xs px-3 py-1.5 text-white bg-fastTeal hover:bg-fastTealDark rounded-md font-bold transition flex items-center gap-1.5 shadow-sm">
+              Tải ảnh Nét Căng HD
+            </button>
+            <button onclick="copyCanvasImageToClipboard('canvas-sig-2')" class="text-xs px-2.5 py-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-md font-bold transition flex items-center gap-1">
+              📋 Chép ảnh (Ctrl+V)
+            </button>
+          </div>
+        </div>
+        <div class="p-3 bg-slate-50/70 rounded-lg border border-slate-200 overflow-x-auto flex justify-start">
+          <canvas id="canvas-sig-2" class="border border-slate-200 bg-white shadow-xs rounded crisp-canvas"></canvas>
+        </div>
+        <div id="table-sig-2" style="display: none;"></div>
+      </div>
+
+      <!-- MẪU 3: ĐIỂM NHẤN ĐỎ FAST -->
+      <div class="glass-card rounded-xl p-4 shadow-xs border border-slate-200 bg-white">
+        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-slate-100 mb-3 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-red-600 text-white text-[11px] font-bold rounded">Mẫu 3</span>
+            <h3 class="font-bold text-slate-900 text-sm">Điểm Nhấn Đỏ Thương Hiệu (Tam giác đỏ &amp; Vạch Đỏ FAST)</h3>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="downloadCanvasImage('canvas-sig-3', 'Chu-Ky-FAST-Mau-3')" class="text-xs px-3 py-1.5 text-white bg-fastTeal hover:bg-fastTealDark rounded-md font-bold transition flex items-center gap-1.5 shadow-sm">
+              Tải ảnh Nét Căng HD
+            </button>
+            <button onclick="copyCanvasImageToClipboard('canvas-sig-3')" class="text-xs px-2.5 py-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-md font-bold transition flex items-center gap-1">
+              📋 Chép ảnh (Ctrl+V)
+            </button>
+          </div>
+        </div>
+        <div class="p-3 bg-slate-50/70 rounded-lg border border-slate-200 overflow-x-auto flex justify-start">
+          <canvas id="canvas-sig-3" class="border border-slate-200 bg-white shadow-xs rounded crisp-canvas"></canvas>
+        </div>
+        <div id="table-sig-3" style="display: none;"></div>
+      </div>
+
+      <!-- MẪU 4: KHUNG BO GÓC HIỆN ĐẠI (MODERN PILL BADGE) -->
+      <div class="glass-card rounded-xl p-4 shadow-xs border border-slate-200 bg-white">
+        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-slate-100 mb-3 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-slate-800 text-white text-[11px] font-bold rounded">Mẫu 4</span>
+            <h3 class="font-bold text-slate-900 text-sm">Thẻ Bo Góc Hiện Đại (Glossy Pill Badge)</h3>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="downloadCanvasImage('canvas-sig-4', 'Chu-Ky-FAST-Mau-4')" class="text-xs px-3 py-1.5 text-white bg-fastTeal hover:bg-fastTealDark rounded-md font-bold transition flex items-center gap-1.5 shadow-sm">
+              Tải ảnh Nét Căng HD
+            </button>
+            <button onclick="copyCanvasImageToClipboard('canvas-sig-4')" class="text-xs px-2.5 py-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-md font-bold transition flex items-center gap-1">
+              📋 Chép ảnh (Ctrl+V)
+            </button>
+          </div>
+        </div>
+        <div class="p-3 bg-slate-50/70 rounded-lg border border-slate-200 overflow-x-auto flex justify-start">
+          <canvas id="canvas-sig-4" class="border border-slate-200 bg-white shadow-xs rounded crisp-canvas"></canvas>
+        </div>
+        <div id="table-sig-4" style="display: none;"></div>
+      </div>
+
+      <!-- MẪU 5: TỐI GIẢN THANH LỊCH (CLEAN MINIMALIST) -->
+      <div class="glass-card rounded-xl p-4 shadow-xs border border-slate-200 bg-white">
+        <div class="flex flex-wrap items-center justify-between pb-2.5 border-b border-slate-100 mb-3 gap-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 bg-teal-600 text-white text-[11px] font-bold rounded">Mẫu 5</span>
+            <h3 class="font-bold text-slate-900 text-sm">Tối Giản Tinh Tế (Clean Tech Line)</h3>
+          </div>
+          <div class="flex items-center gap-1.5">
+            <button onclick="downloadCanvasImage('canvas-sig-5', 'Chu-Ky-FAST-Mau-5')" class="text-xs px-3 py-1.5 text-white bg-fastTeal hover:bg-fastTealDark rounded-md font-bold transition flex items-center gap-1.5 shadow-sm">
+              Tải ảnh Nét Căng HD
+            </button>
+            <button onclick="copyCanvasImageToClipboard('canvas-sig-5')" class="text-xs px-2.5 py-1.5 text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-300 rounded-md font-bold transition flex items-center gap-1">
+              📋 Chép ảnh (Ctrl+V)
+            </button>
+          </div>
+        </div>
+        <div class="p-3 bg-slate-50/70 rounded-lg border border-slate-200 overflow-x-auto flex justify-start">
+          <canvas id="canvas-sig-5" class="border border-slate-200 bg-white shadow-xs rounded crisp-canvas"></canvas>
+        </div>
+        <div id="table-sig-5" style="display: none;"></div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TOAST BÁO TRẠNG THÁI -->
+  <div id="toastBox" class="fixed bottom-5 right-5 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-slate-900 text-white px-4 py-2.5 rounded-xl shadow-xl flex items-center gap-2.5 border border-teal-500/30 text-xs">
+      <div class="w-5 h-5 rounded-full bg-fastTeal text-white flex items-center justify-center font-bold text-[10px]">✓</div>
+      <div>
+        <p class="font-bold text-white" id="toastHeading">Thành công</p>
+        <p class="text-[11px] text-slate-300" id="toastDetail">Nội dung thông báo</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT: NATIVE 2D CANVAS ENGINE - VẼ TRỰC TIẾP RETINA SIÊU NÉT -->
+  <script>
+    let currentLogoVersion = 'EN';
+    let userUploadedLogoImg = null;
+    let logoImageEN = null;
+    let logoImageVN = null;
+
+    let targetBoxWidth = 410;  // Chiều rộng hiển thị (410px vừa khít câu thư)
+    let targetLogoWidth = 100; // Chiều rộng logo FAST chuẩn 3.42:1
+    let renderScale = 2;       // Mặc định 2x Retina Siêu Nét Căng!
+
+    // BẢNG ÁNH XẠ FONT CHỮ
+    const FONT_MAP = {
+      sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif',
+      arial: 'Arial, Helvetica, sans-serif',
+      segoe: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif',
+      roboto: '"Roboto", sans-serif',
+      tahoma: 'Tahoma, Geneva, sans-serif',
+      times: '"Times New Roman", Times, serif',
+      georgia: 'Georgia, serif',
+      courier: '"Courier New", Courier, monospace'
+    };
+
+    // DANH SÁCH DÒNG NỘI DUNG LINH HOẠT VỚI FONT, SIZE, MÀU SẮC RIÊNG
+    let selectedLineIndex = 0;
+    let signatureLines = [
+      { text: 'Nguyễn Văn An', font: 'sans', size: 13.5, color: '#0f172a', bold: true, italic: false, prefix: '👤' },
+      { text: 'Phòng triển khai 2 - Fast Đà Nẵng', font: 'sans', size: 11.5, color: '#334155', bold: true, italic: false, prefix: '' },
+      { text: 'CN Cty CP Phần Mềm QLDN Fast Tại TPHCM - VP Đà Nẵng', font: 'sans', size: 12.5, color: '#00A29B', bold: true, italic: false, prefix: '' },
+      { text: '10B Nguyễn Chí Thanh - P. Hải Châu, TP. Đà Nẵng', font: 'sans', size: 10.5, color: '#475569', bold: false, italic: false, prefix: '📍' },
+      { text: '0905.123.456  |  0236.3810.532', font: 'sans', size: 10.5, color: '#0f172a', bold: false, italic: false, prefix: '📱' },
+      { text: 'kd.danang@fast.com.vn  |  www.fast.com.vn', font: 'sans', size: 10.5, color: '#0284c7', bold: true, italic: false, prefix: '✉️' },
+      { text: 'Nhanh hơn – Thông minh hơn.', font: 'sans', size: 10.5, color: '#007C77', bold: false, italic: true, prefix: '✨' }
+    ];
+
+    // 1. TẠO ĐỐI TƯỢNG ẢNH LOGO FAST VECTOR GỐC NÉT CĂNG Ở ĐỘ PHÂN GIẢI 800px
+    function createFastLogoImage(type, callback) {
+      const c = document.createElement('canvas');
+      const baseW = 800;
+      const baseH = 234;
+      c.width = baseW;
+      c.height = baseH;
+      const ctx = c.getContext('2d');
+      ctx.clearRect(0, 0, baseW, baseH);
+
+      const teal = '#00A29B';
+      const red = '#E31E24';
+
+      ctx.fillStyle = teal;
+
+      // Chữ F
+      ctx.fillRect(36, 26, 36, 134);
+      ctx.fillRect(36, 26, 100, 28);
+      ctx.fillRect(36, 78, 80, 24);
+
+      // Chữ A
+      ctx.beginPath();
+      ctx.moveTo(234, 26);
+      ctx.lineTo(306, 160);
+      ctx.lineTo(266, 160);
+      ctx.lineTo(248, 130);
+      ctx.lineTo(210, 130);
+      ctx.lineTo(194, 160);
+      ctx.lineTo(154, 160);
+      ctx.closePath();
+      ctx.fill();
+
+      // Đục lỗ trong chữ A
+      ctx.save();
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.moveTo(231, 60);
+      ctx.lineTo(246, 104);
+      ctx.lineTo(216, 104);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+
+      // Tam giác đỏ FAST
+      ctx.fillStyle = red;
+      ctx.beginPath();
+      ctx.moveTo(231, 62);
+      ctx.lineTo(244, 102);
+      ctx.lineTo(218, 102);
+      ctx.closePath();
+      ctx.fill();
+
+      // Chữ S
+      ctx.fillStyle = teal;
+      ctx.font = 'bold 135px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif';
+      ctx.textBaseline = 'top';
+      ctx.fillText('S', 326, 22);
+
+      // Chữ T
+      ctx.fillRect(446, 26, 116, 28);
+      ctx.fillRect(486, 26, 36, 134);
+
+      // Dải chữ bo góc bên dưới
+      function roundRect(ctx, x, y, width, height, radius) {
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + width - radius, y);
+        ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+        ctx.lineTo(x + width, y + height - radius);
+        ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+        ctx.lineTo(x + radius, y + height);
+        ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+        ctx.lineTo(x + radius, y);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      ctx.fillStyle = teal;
+      roundRect(ctx, 8, 176, 595, 54, 15);
+
+      ctx.fillStyle = '#FFFFFF';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      if (type === 'VN') {
+        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif';
+        ctx.letterSpacing = '1px';
+        ctx.fillText('PHẦN MỀM KẾ TOÁN & ERP', 305, 204);
+      } else {
+        ctx.font = 'bold 24px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif';
+        ctx.letterSpacing = '1.8px';
+        ctx.fillText('ACCOUNTING & ERP SOFTWARE', 305, 204);
+      }
+
+      const img = new Image();
+      img.onload = () => callback(img);
+      img.src = c.toDataURL('image/png');
+    }
+
+    function getActiveLogoImage() {
+      if (userUploadedLogoImg) return userUploadedLogoImg;
+      return (currentLogoVersion === 'VN') ? logoImageVN : logoImageEN;
+    }
+
+    // 2. VẼ CANVAS ĐỘ NÉT CAO VỚI TỪNG DÒNG CÓ FONT/SIZE/MÀU RIÊNG BIỆT
+    function drawCanvasSignature(canvasId, styleType) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const logoImg = getActiveLogoImage();
+      const validLines = signatureLines.filter(l => l.text.trim().length > 0);
+
+      // Tính toán chiều cao cần thiết dựa trên font size từng dòng
+      const padY = 10;
+      let totalTextH = 0;
+      const lineHeights = validLines.map(l => {
+        const lh = Math.round(l.size * 1.45);
+        totalTextH += lh;
+        return lh;
+      });
+
+      const logicalH = Math.max(90, Math.round(totalTextH + padY * 2));
+      const logicalW = targetBoxWidth;
+
+      // Áp dụng độ nét cao HiDPI
+      const scale = renderScale;
+      canvas.width = Math.round(logicalW * scale);
+      canvas.height = Math.round(logicalH * scale);
+
+      canvas.style.width = logicalW + 'px';
+      canvas.style.height = logicalH + 'px';
+
+      const ctx = canvas.getContext('2d');
+      ctx.setTransform(scale, 0, 0, scale, 0, 0);
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
+
+      // Nền trắng tinh khiết
+      ctx.fillStyle = '#FFFFFF';
+      ctx.fillRect(0, 0, logicalW, logicalH);
+
+      // Style riêng từng mẫu
+      if (styleType === 2) {
+        ctx.strokeStyle = '#ccfbf1';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0.5, 0.5, logicalW - 1, logicalH - 1);
+        ctx.fillStyle = '#00A29B';
+        ctx.fillRect(0, 0, logicalW, 2.5);
+      } else if (styleType === 3) {
+        ctx.strokeStyle = '#fecaca';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0.5, 0.5, logicalW - 1, logicalH - 1);
+        ctx.fillStyle = '#E31E24';
+        ctx.fillRect(0, 0, 3.5, logicalH);
+      } else if (styleType === 4) {
+        ctx.strokeStyle = '#e2e8f0';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(0.5, 0.5, logicalW - 1, logicalH - 1);
+      }
+
+      // 1. Vẽ Logo FAST (Giữ đúng tỷ lệ gốc 3.42:1, căn giữa theo chiều dọc)
+      const logoW = targetLogoWidth;
+      const logoH = Math.round(logoW / 3.42);
+      const logoX = (styleType === 3) ? 13 : 9;
+      const logoY = Math.round((logicalH - logoH) / 2);
+
+      if (logoImg && logoImg.complete) {
+        ctx.drawImage(logoImg, logoX, logoY, logoW, logoH);
+      }
+
+      // 2. Vẽ Vạch Đứng Ngăn Cách Chuẩn FAST
+      const barX = logoX + logoW + 9;
+      const barTop = 9;
+      const barBottom = logicalH - 9;
+
+      let barColor = '#00A29B';
+      if (styleType === 3) barColor = '#E31E24';
+      if (styleType === 5) barColor = '#0284c7';
+
+      ctx.fillStyle = barColor;
+      ctx.fillRect(barX, barTop, 2, barBottom - barTop);
+
+      // 3. Vẽ Từng Dòng Chữ với Font, Cỡ, Màu, Style riêng biệt
+      const textX = barX + 10;
+      let textY = padY;
+
+      validLines.forEach((line, idx) => {
+        const lineH = lineHeights[idx];
+        const fontFam = FONT_MAP[line.font] || FONT_MAP.sans;
+        const fontStyle = line.italic ? 'italic ' : '';
+        const fontWeight = line.bold ? 'bold ' : 'normal ';
+        
+        ctx.font = `${fontStyle}${fontWeight}${Math.round(line.size)}px ${fontFam}`;
+        ctx.fillStyle = (styleType === 3 && idx === 0) ? '#E31E24' : line.color;
+
+        const displayText = (line.prefix ? line.prefix + ' ' : '') + line.text;
+        
+        textY += Math.round(line.size * 0.95);
+        ctx.fillText(displayText, textX, textY);
+        textY += (lineH - Math.round(line.size * 0.95));
+      });
+
+      // Cập nhật khung mô phỏng trực tiếp
+      if (canvasId === 'canvas-sig-1') {
+        const simImg = document.getElementById('simulatedEmailImg');
+        if (simImg) {
+          simImg.src = canvas.toDataURL('image/png');
+          simImg.style.width = logicalW + 'px';
+        }
+      }
+
+      // Đồng bộ nội dung HTML table
+      syncHtmlTable(styleType);
+    }
+
+    function redrawCanvasSignatures() {
+      drawCanvasSignature('canvas-sig-1', 1);
+      drawCanvasSignature('canvas-sig-2', 2);
+      drawCanvasSignature('canvas-sig-3', 3);
+      drawCanvasSignature('canvas-sig-4', 4);
+      drawCanvasSignature('canvas-sig-5', 5);
+    }
+
+    // 3. QUẢN LÝ DÒNG ĐỘNG (THÊM, CHÈN BẤT CỨ VỊ TRÍ NÀO, XÓA, ĐỔI THỨ TỰ)
+    function renderLinesList() {
+      const container = document.getElementById('linesContainer');
+      const totalLbl = document.getElementById('lblTotalLines');
+      if (!container) return;
+
+      container.innerHTML = '';
+      if (totalLbl) totalLbl.textContent = `${signatureLines.length} dòng`;
+
+      if (selectedLineIndex >= signatureLines.length) {
+        selectedLineIndex = Math.max(0, signatureLines.length - 1);
+      }
+
+      signatureLines.forEach((line, idx) => {
+        const isSelected = (idx === selectedLineIndex);
+        const card = document.createElement('div');
+        card.className = `p-2 rounded-lg border transition cursor-pointer flex items-center gap-1.5 ${
+          isSelected 
+            ? 'bg-teal-50/90 border-fastTeal ring-1 ring-fastTeal shadow-2xs' 
+            : 'bg-slate-50/70 border-slate-200 hover:bg-slate-100 hover:border-slate-300'
+        }`;
+
+        card.onclick = (e) => {
+          if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'INPUT') {
+            selectLine(idx);
+          }
+        };
+
+        card.innerHTML = `
+          <div class="flex flex-col items-center justify-center shrink-0 w-6">
+            <span class="w-4 h-4 rounded-full ${isSelected ? 'bg-fastTeal text-white' : 'bg-slate-200 text-slate-700'} text-[9px] font-black flex items-center justify-center">
+              ${idx + 1}
+            </span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-1 mb-0.5">
+              <span class="text-[10px] text-slate-400 font-mono">${line.prefix || '•'}</span>
+              <span class="text-[9px] px-1 py-0.2 rounded bg-white border border-slate-200 font-mono text-slate-500">${line.size}px</span>
+              <span class="w-2.5 h-2.5 rounded-full inline-block border border-white shrink-0" style="background-color: ${line.color};"></span>
+              <span class="text-[9px] text-slate-400 truncate">${line.font}</span>
+            </div>
+            <input type="text" value="${escapeHtml(line.text)}" 
+              onfocus="selectLine(${idx})"
+              oninput="updateLineText(${idx}, this.value)" 
+              class="w-full px-1.5 py-0.5 bg-white border ${isSelected ? 'border-teal-400' : 'border-slate-300'} rounded text-[11px] text-slate-800 outline-none font-medium">
+          </div>
+          <div class="flex flex-col gap-0.5 shrink-0">
+            <div class="flex items-center gap-0.5">
+              <button type="button" onclick="insertLineAt(${idx}, 'above')" title="Chèn dòng lên trên dòng này" class="w-5 h-4 bg-white border border-teal-300 hover:bg-teal-50 text-teal-800 rounded text-[9px] font-bold flex items-center justify-center">
+                +↑
+              </button>
+              <button type="button" onclick="insertLineAt(${idx}, 'below')" title="Chèn dòng xuống dưới dòng này" class="w-5 h-4 bg-white border border-teal-300 hover:bg-teal-50 text-teal-800 rounded text-[9px] font-bold flex items-center justify-center">
+                +↓
+              </button>
+            </div>
+            <div class="flex items-center gap-0.5">
+              <button type="button" onclick="moveLine(${idx}, -1)" title="Đẩy lên" class="w-5 h-4 bg-white border border-slate-300 hover:bg-slate-100 text-slate-600 rounded text-[9px] flex items-center justify-center">
+                ▲
+              </button>
+              <button type="button" onclick="moveLine(${idx}, 1)" title="Đẩy xuống" class="w-5 h-4 bg-white border border-slate-300 hover:bg-slate-100 text-slate-600 rounded text-[9px] flex items-center justify-center">
+                ▼
+              </button>
+            </div>
+          </div>
+        `;
+
+        container.appendChild(card);
+      });
+
+      updateLineEditorPanel();
+    }
+
+    function selectLine(idx) {
+      selectedLineIndex = idx;
+      renderLinesList();
+    }
+
+    function updateLineEditorPanel() {
+      const cur = signatureLines[selectedLineIndex];
+      if (!cur) return;
+
+      document.getElementById('lblSelectedLineIndex').textContent = `Dòng #${selectedLineIndex + 1}`;
+      document.getElementById('selLineFont').value = cur.font || 'sans';
+      document.getElementById('rngLineSize').value = cur.size || 11.5;
+      document.getElementById('lblLineSizeVal').textContent = `${cur.size}px`;
+      document.getElementById('inpLineColor').value = cur.color || '#0f172a';
+      document.getElementById('lblLineColorHex').textContent = cur.color || '#0f172a';
+      document.getElementById('selLinePrefix').value = cur.prefix || '';
+
+      const btnB = document.getElementById('btnToggleBold');
+      const btnI = document.getElementById('btnToggleItalic');
+      if (cur.bold) {
+        btnB.className = 'flex-1 py-1 border border-fastTeal bg-fastTeal text-white rounded font-black text-xs transition';
+      } else {
+        btnB.className = 'flex-1 py-1 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded font-black text-xs transition';
+      }
+
+      if (cur.italic) {
+        btnI.className = 'flex-1 py-1 border border-fastTeal bg-fastTeal text-white rounded italic font-serif text-xs transition';
+      } else {
+        btnI.className = 'flex-1 py-1 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 rounded italic font-serif text-xs transition';
+      }
+    }
+
+    function updateLineText(idx, val) {
+      if (signatureLines[idx]) {
+        signatureLines[idx].text = val;
+        redrawCanvasSignatures();
+      }
+    }
+
+    function updateSelectedLineProperty(prop, val) {
+      const cur = signatureLines[selectedLineIndex];
+      if (!cur) return;
+
+      cur[prop] = val;
+      if (prop === 'size') {
+        document.getElementById('lblLineSizeVal').textContent = `${val}px`;
+      }
+      if (prop === 'color') {
+        document.getElementById('lblLineColorHex').textContent = val;
+      }
+      renderLinesList();
+      redrawCanvasSignatures();
+    }
+
+    function setLineColorQuick(hex) {
+      document.getElementById('inpLineColor').value = hex;
+      updateSelectedLineProperty('color', hex);
+    }
+
+    function toggleSelectedLineStyle(styleKey) {
+      const cur = signatureLines[selectedLineIndex];
+      if (!cur) return;
+      cur[styleKey] = !cur[styleKey];
+      updateLineEditorPanel();
+      redrawCanvasSignatures();
+    }
+
+    // CHÈN DÒNG Ở BẤT CỨ VỊ TRÍ NÀO
+    function insertLineRelativeToSelected(position) {
+      const newLine = {
+        text: 'Dòng nội dung mới',
+        font: 'sans',
+        size: 11,
+        color: '#334155',
+        bold: false,
+        italic: false,
+        prefix: '•'
+      };
+
+      if (position === 'above') {
+        signatureLines.splice(selectedLineIndex, 0, newLine);
+        notify('Đã chèn dòng mới lên TRÊN!', `Vị trí dòng #${selectedLineIndex + 1}`);
+      } else {
+        selectedLineIndex++;
+        signatureLines.splice(selectedLineIndex, 0, newLine);
+        notify('Đã chèn dòng mới xuống DƯỚI!', `Vị trí dòng #${selectedLineIndex + 1}`);
+      }
+
+      renderLinesList();
+      redrawCanvasSignatures();
+    }
+
+    function insertLineAt(idx, position) {
+      selectedLineIndex = idx;
+      insertLineRelativeToSelected(position);
+    }
+
+    function addNewLineAtEnd() {
+      const newLine = {
+        text: 'Dòng thông tin bổ sung',
+        font: 'sans',
+        size: 10.5,
+        color: '#007C77',
+        bold: false,
+        italic: false,
+        prefix: '✨'
+      };
+      signatureLines.push(newLine);
+      selectedLineIndex = signatureLines.length - 1;
+      renderLinesList();
+      redrawCanvasSignatures();
+      notify('Đã thêm dòng mới ở cuối!', `Tổng cộng: ${signatureLines.length} dòng`);
+    }
+
+    function deleteSelectedLine() {
+      if (signatureLines.length <= 1) {
+        notify('Không thể xóa hết', 'Phải giữ ít nhất 1 dòng chữ ký.');
+        return;
+      }
+      signatureLines.splice(selectedLineIndex, 1);
+      selectedLineIndex = Math.max(0, selectedLineIndex - 1);
+      renderLinesList();
+      redrawCanvasSignatures();
+      notify('Đã xóa dòng', 'Danh sách đã được cập nhật.');
+    }
+
+    function moveSelectedLine(offset) {
+      moveLine(selectedLineIndex, offset);
+    }
+
+    function moveLine(idx, offset) {
+      const targetIdx = idx + offset;
+      if (targetIdx < 0 || targetIdx >= signatureLines.length) return;
+
+      const item = signatureLines.splice(idx, 1)[0];
+      signatureLines.splice(targetIdx, 0, item);
+      selectedLineIndex = targetIdx;
+      renderLinesList();
+      redrawCanvasSignatures();
+    }
+
+    function resetToDefaultLines() {
+      signatureLines = [
+        { text: 'Nguyễn Văn An', font: 'sans', size: 13.5, color: '#0f172a', bold: true, italic: false, prefix: '👤' },
+        { text: 'Phòng triển khai 2 - Fast Đà Nẵng', font: 'sans', size: 11.5, color: '#334155', bold: true, italic: false, prefix: '' },
+        { text: 'CN Cty CP Phần Mềm QLDN Fast Tại TPHCM - VP Đà Nẵng', font: 'sans', size: 12.5, color: '#00A29B', bold: true, italic: false, prefix: '' },
+        { text: '10B Nguyễn Chí Thanh - P. Hải Châu, TP. Đà Nẵng', font: 'sans', size: 10.5, color: '#475569', bold: false, italic: false, prefix: '📍' },
+        { text: '0905.123.456  |  0236.3810.532', font: 'sans', size: 10.5, color: '#0f172a', bold: false, italic: false, prefix: '📱' },
+        { text: 'kd.danang@fast.com.vn  |  www.fast.com.vn', font: 'sans', size: 10.5, color: '#0284c7', bold: true, italic: false, prefix: '✉️' },
+        { text: 'Nhanh hơn – Thông minh hơn.', font: 'sans', size: 10.5, color: '#007C77', bold: false, italic: true, prefix: '✨' }
+      ];
+      selectedLineIndex = 0;
+      renderLinesList();
+      redrawCanvasSignatures();
+      notify('Đã đặt lại mẫu chuẩn', 'Khôi phục 7 dòng cơ bản của FAST.');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // ĐIỀU KHIỂN ĐỘ NÉT RETINA (1x, 2x, 3x)
+    function setRenderScale(scale) {
+      renderScale = scale;
+      const b1 = document.getElementById('btnScale1');
+      const b2 = document.getElementById('btnScale2');
+      const b3 = document.getElementById('btnScale3');
+      const badge = document.getElementById('headerResolutionBadge');
+      const lbl = document.getElementById('lblResMode');
+
+      [b1, b2, b3].forEach(b => {
+        if(b) b.className = 'py-1 px-1 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 font-medium text-center transition';
+      });
+
+      if (scale === 1) {
+        b1.className = 'py-1 px-1 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+        badge.textContent = '1x Chuẩn 410px';
+        lbl.textContent = '1x Tiêu chuẩn';
+        notify('Đã đổi sang 1x (Chuẩn)', 'Dung lượng nhẹ nhất.');
+      } else if (scale === 2) {
+        b2.className = 'py-1 px-1 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+        badge.textContent = '⭐ 2x Retina (Nét Căng)';
+        lbl.textContent = '2x Nét Căng';
+        notify('Đã kích hoạt 2x Retina Siêu Nét!', 'Mật độ điểm ảnh gấp đôi, chữ và logo nét căng.');
+      } else if (scale === 3) {
+        b3.className = 'py-1 px-1 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+        badge.textContent = '3x Ultra HD 4K';
+        lbl.textContent = '3x Ultra HD';
+        notify('Đã kích hoạt 3x Ultra HD!', 'Độ nét tối đa cho màn hình 4K.');
+      }
+
+      redrawCanvasSignatures();
+    }
+
+    // ĐIỀU CHỈNH KÍCH THƯỚC TRỰC TIẾP
+    function onWidthSliderChange(val) {
+      targetBoxWidth = parseInt(val, 10);
+      document.getElementById('sliderWidthVal').textContent = `${targetBoxWidth} px`;
+      
+      const b360 = document.getElementById('btnSize360');
+      const b410 = document.getElementById('btnSize410');
+      const b470 = document.getElementById('btnSize470');
+      [b360, b410, b470].forEach(b => {
+        if(b) b.className = 'py-1 px-1.5 border border-slate-300 rounded bg-white text-slate-700 hover:bg-slate-50 text-center font-medium transition';
+      });
+      if (targetBoxWidth === 360 && b360) b360.className = 'py-1 px-1.5 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+      if (targetBoxWidth === 410 && b410) b410.className = 'py-1 px-1.5 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+      if (targetBoxWidth === 470 && b470) b470.className = 'py-1 px-1.5 bg-fastTeal text-white rounded font-bold shadow-xs text-center transition';
+
+      redrawCanvasSignatures();
+    }
+
+    function applyPresetWidth(w) {
+      document.getElementById('sliderWidth').value = w;
+      onWidthSliderChange(w);
+      if (w === 410) {
+        notify('Đã chọn 410px (Chuẩn SPM)', 'Khớp vừa khít dòng thư SPM trong ảnh gửi.');
+      }
+    }
+
+    function onLogoSliderChange(val) {
+      targetLogoWidth = parseInt(val, 10);
+      document.getElementById('sliderLogoVal').textContent = `${targetLogoWidth} px`;
+      redrawCanvasSignatures();
+    }
+
+    function setLogoVersion(ver) {
+      currentLogoVersion = ver;
+      const bEN = document.getElementById('btnLogoEN');
+      const bVN = document.getElementById('btnLogoVN');
+      if (ver === 'EN') {
+        bEN.className = 'py-1 px-2 bg-fastTeal text-white rounded text-[11px] font-bold shadow-xs transition';
+        bVN.className = 'py-1 px-2 bg-slate-100 text-slate-700 border border-slate-200 rounded text-[11px] font-medium hover:bg-slate-200 transition';
+      } else {
+        bVN.className = 'py-1 px-2 bg-fastTeal text-white rounded text-[11px] font-bold shadow-xs transition';
+        bEN.className = 'py-1 px-2 bg-slate-100 text-slate-700 border border-slate-200 rounded text-[11px] font-medium hover:bg-slate-200 transition';
+      }
+      redrawCanvasSignatures();
+      notify('Đã đổi Logo FAST', ver === 'EN' ? 'Bản EN (ERP Software)' : 'Bản VN (Kế toán & ERP)');
+    }
+
+    function onCustomLogoUpload(event) {
+      const f = event.target.files[0];
+      if (!f) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          userUploadedLogoImg = img;
+          document.getElementById('lblUploadName').textContent = f.name;
+          document.getElementById('btnResetLogo').classList.remove('hidden');
+          redrawCanvasSignatures();
+          notify('Đã nhận Logo riêng!', f.name);
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(f);
+    }
+
+    function resetCustomLogo() {
+      userUploadedLogoImg = null;
+      document.getElementById('fileUploadLogo').value = '';
+      document.getElementById('lblUploadName').textContent = 'Dùng ảnh logo từ máy...';
+      document.getElementById('btnResetLogo').classList.add('hidden');
+      redrawCanvasSignatures();
+      notify('Đã đặt lại', 'Sử dụng logo vector chuẩn gốc.');
+    }
+
+    // TẢI FILE ẢNH CANVAS NÉT CĂNG RETINA
+    function downloadCanvasImage(canvasId, filename) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      const link = document.createElement('a');
+      link.download = `${filename}-${targetBoxWidth}px-${renderScale}xHD.png`;
+      link.href = canvas.toDataURL('image/png', 1.0);
+      link.click();
+
+      notify('Tải ảnh Siêu Nét HD thành công!', `Độ phân giải: ${canvas.width}x${canvas.height}px (${renderScale}x Retina).`);
+    }
+
+    // SAO CHÉP ẢNH VÀO CLIPBOARD ĐỂ PASTE (CTRL+V) VÀO SPM
+    async function copyCanvasImageToClipboard(canvasId) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+
+      try {
+        canvas.toBlob(async (blob) => {
+          if (!blob) return;
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            notify('Đã chép ảnh Nét Căng vào bộ nhớ tạm!', 'Chỉ cần mở SPM hoặc Gmail và ấn Ctrl + V để dán.');
+          } catch (err) {
+            downloadCanvasImage(canvasId, 'Chu-Ky-FAST-SPM');
+          }
+        }, 'image/png');
+      } catch (e) {
+        downloadCanvasImage(canvasId, 'Chu-Ky-FAST-SPM');
+      }
+    }
+
+    // ĐỒNG BỘ BẢNG HTML VỚI CÁC DÒNG ĐỊNH DẠNG RIÊNG
+    function syncHtmlTable(styleType) {
+      const activeImg = getActiveLogoImage();
+      const logoSrc = activeImg ? activeImg.src : '';
+
+      const wrap = document.getElementById('table-sig-' + styleType);
+      if (!wrap) return;
+
+      const validLines = signatureLines.filter(l => l.text.trim().length > 0);
+      let rowsHtml = '';
+
+      validLines.forEach((line, idx) => {
+        const fontFam = FONT_MAP[line.font] || FONT_MAP.sans;
+        const color = (styleType === 3 && idx === 0) ? '#E31E24' : line.color;
+        const fontWeight = line.bold ? '700' : '400';
+        const fontStyle = line.italic ? 'italic' : 'normal';
+        const displayPrefix = line.prefix ? `${line.prefix} ` : '';
+
+        // Tự động nhận diện link email và website
+        let contentHtml = escapeHtml(line.text);
+        if (contentHtml.includes('@') && !contentHtml.includes('<a')) {
+          contentHtml = contentHtml.replace(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi, '<a href="mailto:$1" style="color: inherit; text-decoration: none; font-weight: inherit;">$1</a>');
+        }
+        if (contentHtml.includes('www.') || contentHtml.includes('http')) {
+          contentHtml = contentHtml.replace(/(www\.[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi, '<a href="https://$1" target="_blank" style="color: inherit; text-decoration: none; font-weight: inherit;">$1</a>');
+        }
+
+        rowsHtml += `
+          <div style="font-family: ${fontFam}; font-size: ${line.size}px; line-height: 1.45; color: ${color}; font-weight: ${fontWeight}; font-style: ${fontStyle}; margin-bottom: 2px;">
+            ${displayPrefix}${contentHtml}
+          </div>
+        `;
+      });
+
+      wrap.innerHTML = `
+        <table cellpadding="0" cellspacing="0" border="0" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; line-height: 1.45; color: #1e293b; width: ${targetBoxWidth}px; max-width: ${targetBoxWidth}px; border-collapse: collapse; background: #ffffff;">
+          <tr>
+            <td style="vertical-align: middle; padding-right: 10px; width: ${targetLogoWidth}px; text-align: center;">
+              <img src="${logoSrc}" alt="FAST Logo" width="${targetLogoWidth}" style="display: block; width: ${targetLogoWidth}px; height: auto; border: 0;" />
+            </td>
+            <td style="width: 2px; background-color: ${styleType === 3 ? '#E31E24' : '#00A29B'}; padding: 0; min-width: 2px;">&nbsp;</td>
+            <td style="vertical-align: middle; padding-left: 10px;">
+              ${rowsHtml}
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function copyRichTextSignature(tableWrapId, templateName) {
+      const container = document.getElementById(tableWrapId);
+      if (!container) return;
+
+      container.style.display = 'block';
+      window.getSelection().removeAllRanges();
+      const range = document.createRange();
+      range.selectNode(container);
+      window.getSelection().addRange(range);
+
+      try {
+        const ok = document.execCommand('copy');
+        if (ok) {
+          notify(`Đã sao chép HTML ${templateName}!`, 'Dán trực tiếp (Ctrl+V) vào SPM hoặc Gmail.');
+        } else {
+          notify('Hãy bôi đen và ấn Ctrl + C', 'Trình duyệt không cho sao chép tự động.');
+        }
+      } catch (e) {
+        notify('Lỗi sao chép', 'Hãy bôi đen và ấn Ctrl + C.');
+      }
+      window.getSelection().removeAllRanges();
+      container.style.display = 'none';
+    }
+
+    let toastTimer;
+    function notify(heading, detail) {
+      const box = document.getElementById('toastBox');
+      document.getElementById('toastHeading').textContent = heading;
+      document.getElementById('toastDetail').textContent = detail;
+      box.classList.remove('translate-y-20', 'opacity-0');
+      box.classList.add('translate-y-0', 'opacity-100');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        box.classList.remove('translate-y-0', 'opacity-100');
+        box.classList.add('translate-y-20', 'opacity-0');
+      }, 3200);
+    }
+
+    // KHỞI ĐỘNG ỨNG DỤNG
+    function startApp() {
+      renderLinesList();
+      createFastLogoImage('EN', (imgEN) => {
+        logoImageEN = imgEN;
+        createFastLogoImage('VN', (imgVN) => {
+          logoImageVN = imgVN;
+          redrawCanvasSignatures();
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', startApp);
+    } else {
+      startApp();
+    }
+  </script>
 </body>
 </html>
